@@ -27,23 +27,26 @@ def load_movies(session):
     # create reader of u.item
         reader = csv.reader(m, delimiter="|")
         for line in reader:
-            print line
-    # create new item -> model.Movie()
-        #new_movie = model.Movie()
-    # add movie to session
-        #session.add(new_movie)
+            new_movie = model.Movie(id=line[0], movie_title=line[1].decode("latin-1"), release_date=line[2], IMDB=line[4])
+            # add new movie to session
+            session.add(new_movie)
     # commit all movies from session
-    #session.commit()
-
-    pass
+    session.commit()
 
 def load_ratings(session):
     # use u.data
-    pass
+    with open("seed_data/u.data") as r:
+        reader = csv.reader(r, delimiter="\t")
+        for line in reader:
+            new_rating = model.Rating(user_id=line[0], movie_id=line[1], rating=line[3])
+            session.add(new_rating)
+    session.commit()
 
 def main(session):
     # You'll call each of the load_* functions with the session as an argument
+    load_users(session)
     load_movies(session)
+    load_ratings(session)
 
 if __name__ == "__main__":
     s= model.connect()

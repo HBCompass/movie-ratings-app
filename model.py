@@ -35,7 +35,7 @@ class Rating(Base):
 
     id = Column(Integer, primary_key = True)
     user_id = Column(Integer)
-    move_id = Column(Integer)
+    movie_id = Column(Integer)
     rating = Column(Integer)
 
 ### End class declarations
