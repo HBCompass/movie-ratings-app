@@ -1,5 +1,7 @@
 import model
 import csv
+from datetime import datetime
+import time #shut up 
 
 def load_users(session):
     # use u.user
@@ -27,11 +29,19 @@ def load_movies(session):
     # create reader of u.item
         reader = csv.reader(m, delimiter="|")
         for line in reader:
-            movie_title = movie_title=line[1].decode("latin-1")
-            movie_title = movie_title[:-6].strip()
-            new_movie = model.Movie(id=line[0], movie_title=movie_title, release_date=line[2], IMDB=line[4])
-            # add new movie to session
-            session.add(new_movie)
+           
+            # if len(str_time)< 11:
+            #     str_time = "0" + str_time
+            str_time = line[2]
+            if str_time != "0":
+                movie_title = line[1].decode("latin-1")
+                movie_title = movie_title[:-6].strip()
+            
+                release_datetime = datetime.strptime(str_time, "%d-%b-%Y")
+                new_movie = model.Movie(id=line[0], movie_title=movie_title, 
+                            release_date=release_datetime, IMDB=line[4])
+                # add new movie to session
+                session.add(new_movie)
     # commit all movies from session
     session.commit()
 
