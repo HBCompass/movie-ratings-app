@@ -27,7 +27,9 @@ def load_movies(session):
     # create reader of u.item
         reader = csv.reader(m, delimiter="|")
         for line in reader:
-            new_movie = model.Movie(id=line[0], movie_title=line[1].decode("latin-1"), release_date=line[2], IMDB=line[4])
+            movie_title = movie_title=line[1].decode("latin-1")
+            movie_title = movie_title[:-6].strip()
+            new_movie = model.Movie(id=line[0], movie_title=movie_title, release_date=line[2], IMDB=line[4])
             # add new movie to session
             session.add(new_movie)
     # commit all movies from session

@@ -29,6 +29,10 @@ class Movie(Base):
     release_date = Column(String(15))
     IMDB = Column(String(140), nullable = True)
 
+    # def __repr__(self):
+    #     return "Id: %r Movie Title: %r Release Date: %r IMDB: %r" % (self.id, self.movie_title,
+    #                                                              self.release_date, self.IMDB)
+
 class Rating(Base):
     """ from u.data info """
     __tablename__ = "ratings"
