@@ -1,7 +1,8 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from sqlalchemy import ForeignKey
 from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 from datetime import datetime
 
 ### Code for creating the database
@@ -10,10 +11,13 @@ from datetime import datetime
 # Base.metadata.create_all(engine)
 
 
-ENGINE = None
-Session = None
+engine = create_engine("sqlite:///ratings.db", echo=False)
+session = scoped_session(sessionmaker(bind=engine,
+                                      autocommit = False,
+                                      autoflush = False))
 
 Base = declarative_base()
+Base.query = session.query_property()
 
 ### Class declarations go here
 class User(Base):
@@ -36,29 +40,32 @@ class Movie(Base):
     release_date = Column(DateTime)
     IMDB = Column(String(140), nullable = True)
 
-    def __repr__(self):
-        return "Id: %r Movie Title: %r Release Date: %s IMDB: %r" % (self.id, self.movie_title,
-                                                                 datetime.strftime(self.release_date, "%d-%b-%Y"), self.IMDB)
+    # def __repr__(self):
+    #     return "Id: %r Movie Title: %r Release Date: %s IMDB: %r" % (self.id, self.movie_title,
+    #                                                              datetime.strftime(self.release_date, "%d-%b-%Y"), self.IMDB)
 
 class Rating(Base):
     """ from u.data info """
     __tablename__ = "ratings"
 
     id = Column(Integer, primary_key = True)
-    user_id = Column(Integer)
-    movie_id = Column(Integer)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    movie_id = Column(Integer, ForeignKey('movies.id'))
     rating = Column(Integer)
+
+    user = relationship("User", backref=backref("ratings", order_by=id))
+    movie = relationship("Movie", backref=backref("movies", order_by=id))
 
 ### End class declarations
 
-def connect():
-    global ENGINE
-    global Session
+# def connect():
+#     global ENGINE
+#     global Session
 
-    ENGINE = create_engine("sqlite:///ratings.db", echo=True)
-    Session = sessionmaker(bind=ENGINE)
+#     ENGINE = create_engine("sqlite:///ratings.db", echo=True)
+#     Session = sessionmaker(bind=ENGINE)
 
-    return Session()
+#     return Session()
 
 def main():
     """In case we need this for something"""

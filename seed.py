@@ -1,7 +1,6 @@
 import model
 import csv
 from datetime import datetime
-import time #shut up 
 
 def load_users(session):
     # use u.user
@@ -20,8 +19,6 @@ def load_users(session):
     #end loop
     # commit ALL users from that session
     session.commit()
-
-    #return????? nothing????? ghost noises 
 
 def load_movies(session):
     # use u.item
