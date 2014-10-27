@@ -5,6 +5,8 @@ from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 from datetime import datetime
 
+
+
 ### Code for creating the database
 # python -i model.py
 # engine = create_engine("sqlite:///ratings.db", echo=True)
@@ -31,6 +33,13 @@ class User(Base):
     zipcode = Column(String(15), nullable = True)
     gender = Column(String(10), nullable = True)
 
+    def __repr__(self):
+        return "Email: %r\n\
+Password: %r\n\
+Age: %r \n\
+Zipcode: %r\n\
+Gender: %r" % (self.email, self.password, self.age, self.zipcode, self.gender)
+
 class Movie(Base):
     """ from u.items info """
     __tablename__ = "movies"
@@ -40,9 +49,9 @@ class Movie(Base):
     release_date = Column(DateTime)
     IMDB = Column(String(140), nullable = True)
 
-    # def __repr__(self):
-    #     return "Id: %r Movie Title: %r Release Date: %s IMDB: %r" % (self.id, self.movie_title,
-    #                                                              datetime.strftime(self.release_date, "%d-%b-%Y"), self.IMDB)
+    def __repr__(self):
+        return "Id: %r Movie Title: %r Release Date: %s IMDB: %r" % (self.id, self.movie_title,
+                                                                 datetime.strftime(self.release_date, "%d-%b-%Y"), self.IMDB)
 
 class Rating(Base):
     """ from u.data info """
@@ -54,7 +63,7 @@ class Rating(Base):
     rating = Column(Integer)
 
     user = relationship("User", backref=backref("ratings", order_by=id))
-    movie = relationship("Movie", backref=backref("movies", order_by=id))
+    movie = relationship("Movie", backref=backref("ratings", order_by=rating))
 
 ### End class declarations
 
