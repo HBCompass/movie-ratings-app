@@ -1,13 +1,22 @@
 from flask import Flask, render_template, redirect, request, flash
-from flask import session as websession
+from flask import session as session
 import model
 import jinja2
+import api
 
 app = Flask(__name__)
 
 app.secret_key = '\xc1\xe2=\x1b\x8e\xdc\xfdbq\xdaKuO*}g\xfd'
 
+@app.before_first_request
+def setup_session():
+    session.setdefault("logged_in", False)
+    session.setdefault("user_id", None)
 
+# @app.before_request
+# def get_user():
+#     if session["user_id"] is not None:
+#         g.user = 
 
 @app.route("/")
 def index():
@@ -25,9 +34,7 @@ def sign_up():
 
 @app.route("/signup", methods=["POST"])
 def process_signup():
-    #processess signup form and redirects to ??? if successful 
-
-
+    #processess signup form and redirects to ??? if successful
 
     #if any values are null
     #flash("please fill out all fields")
@@ -40,21 +47,26 @@ def process_signup():
             flash("Please fill out all fields.")
             return redirect("/signup")
 
+    if api.get_user_by_email(request.form.get("email")):
+        flash("Email already in use.")
+        return redirect ('/signup')
+
+    # new_user = model.User()
+    # new_user.email = request.form.get("email")
+    # new_user.password = request.form.get("password")
+    # new_user.age = request.form.get("age")
+    # new_user.gender = request.form.get("gender")
+    # new_user.zipcode = request.form.get("zipcode")
 
     new_user = model.User()
-    new_user.email = request.form.get("email")
-    new_user.password = request.form.get("password")
-    new_user.age = request.form.get("age")
-    new_user.gender = request.form.get("gender")
-    new_user.zipcode = request.form.get("zipcode")
+    new_user.form_user(request.form)
 
     print new_user
-
-    #create a new user for the database
 
     #insert that user into the database
     # session.add(new_user)
     # session.commit()
+
     #redirect to login page 
     flash('Thanks for singing up! Please login!')
     return redirect("/login")
@@ -69,7 +81,12 @@ def login():
 @app.route("/login", methods=["POST"])
 def process_login():
     #processess login form and redirects to ??? if successful
-    return "Post request!"
+    #login unsuccessful:
+        flash('login unsuccessful')
+        return redirect("/login")
+    #login successful:
+        flash('login successful')
+        return redirect("/userratings")
 
 
 
@@ -87,6 +104,7 @@ def display_movie_ratings_by_user():
 @app.route("/rate")
 def rate_movie():
     #when logged in, add or update rating for movie
+    movie_id=42 #placeholder
     return render_template("rate_movie.html", movie=movie_id) #figure out what to actually pass
 
 

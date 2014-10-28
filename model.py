@@ -27,11 +27,23 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key = True)
-    email = Column(String(64), nullable = True)
+    email = Column(String(64), nullable = True, unique=True)
     password = Column(String(64), nullable = True)
     age = Column(Integer, nullable = True)
     zipcode = Column(String(15), nullable = True)
     gender = Column(String(10), nullable = True)
+
+    def form_user(self, form_dict):
+        self.email = form_dict.get("email")
+        self.password = form_dict.get("password")
+        self.age = form_dict.get("age")
+        self.gender = form_dict.get("gender")
+        self.zipcode = form_dict.get("zipcode")
+
+        #sample usage:
+        #my_user = model.User()
+        #my_user.form_user(request.form)
+
 
     def __repr__(self):
         return "Email: %s\n\
