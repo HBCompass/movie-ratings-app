@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 from flask import session as websession
 import model
 import jinja2
@@ -23,27 +23,42 @@ def sign_up():
     #flash "please enter valid data for so and so"
     return render_template("sign_up.html")
 
-# @app.route("/signup", methods=["POST"])
-# def process_signup():
-#     #processess signup form and redirects to ??? if successful 
+@app.route("/signup", methods=["POST"])
+def process_signup():
+    #processess signup form and redirects to ??? if successful 
 
-#     #get values from html fields: email, password, age, gender, zip
-#     new_user = model.User()
-#     new_user.email = request.form.get("email")
-#     new_user.password = request.form.get("password")
-#     new_user.age = request.form.get("age")
-#     new_user.gender = request.form.get("gender")
-#     new_user.zipcode = request.form.get("zipcode")
 
-#     print new_user
-#     #create a new user for the database
 
-#     #insert that user into the database
-#     # session.add(new_user)
-#     # session.commit()
-#     #redirect to login page 
+    #if any values are null
+    #flash("please fill out all fields")
+    #redirect back to /signup (GET)
+    print "Request is: ", request
+    print "Request form is: ", request.form
 
-#     return redirect("login.html")
+    for value in request.form.values():
+        if value == "": 
+            flash("Please fill out all fields.")
+            return redirect("/signup")
+
+
+    new_user = model.User()
+    new_user.email = request.form.get("email")
+    new_user.password = request.form.get("password")
+    new_user.age = request.form.get("age")
+    new_user.gender = request.form.get("gender")
+    new_user.zipcode = request.form.get("zipcode")
+
+    print new_user
+
+    #create a new user for the database
+
+    #insert that user into the database
+    # session.add(new_user)
+    # session.commit()
+    #redirect to login page 
+    flash('Thanks for singing up! Please login!')
+    return redirect("/login")
+
 
 
 @app.route("/login")

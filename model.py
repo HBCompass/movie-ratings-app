@@ -34,11 +34,11 @@ class User(Base):
     gender = Column(String(10), nullable = True)
 
     def __repr__(self):
-        return "Email: %r\n\
-Password: %r\n\
-Age: %r \n\
-Zipcode: %r\n\
-Gender: %r" % (self.email, self.password, self.age, self.zipcode, self.gender)
+        return "Email: %s\n\
+Password: %s\n\
+Age: %s\n\
+Zipcode: %s\n\
+Gender: %s" % (self.email, self.password, self.age, self.zipcode, self.gender)
 
 class Movie(Base):
     """ from u.items info """
@@ -50,8 +50,15 @@ class Movie(Base):
     IMDB = Column(String(140), nullable = True)
 
     def __repr__(self):
-        return "Id: %r Movie Title: %r Release Date: %s IMDB: %r" % (self.id, self.movie_title,
-                                                                 datetime.strftime(self.release_date, "%d-%b-%Y"), self.IMDB)
+        date_string = None
+        try:
+            date_string = datetime.strftime(self.release_date, "%d-%b-%Y")
+        except: TypeError 
+        return "ID: %s\n\
+Movie Title: %s\n\
+Release Date: %s\n\
+IMDB: %s" % (self.id, self.movie_title, date_string,
+             self.IMDB)
 
 class Rating(Base):
     """ from u.data info """
@@ -64,6 +71,12 @@ class Rating(Base):
 
     user = relationship("User", backref=backref("ratings", order_by=id))
     movie = relationship("Movie", backref=backref("ratings", order_by=rating))
+
+    def __repr__(self):
+        return "Rating ID: %s\n\
+User ID: %s\n\
+Movie ID: %s\n\
+%s Stars" % (self.id, self.user_id, self.movie_id, self.rating) 
 
 ### End class declarations
 

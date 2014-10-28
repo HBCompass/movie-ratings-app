@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 {% block body %}
-    <form class="sign-up-form" method="POST">
+    <div><form class="sign-up-form" method="POST">
         <div><label for="email">Email:</label>
-        <input type = "text" id="email"/></div>
+        <input type = "text" name ="email" id="email"/></div>
 
         <div><label for="password">Password:</label>
-        <input type = "text" id="password"/></div>
+        <input type = "text" name="password" id="password"/></div>
 
         <div><label for="age">Age:</label>
-        <input type = "text" id="age"/></div>
+        <input type = "text" name="age" id="age"/></div>
 
         <div><label for="zipcode">Zipcode:</label>
-        <input type = "text" id="zipcode"/></div>
+        <input type = "text" name="zipcode" id="zipcode"/></div>
 
         <div><label for="gender">Gender:</label>
         <input type="radio" name="sex" value="male">Male
@@ -20,6 +20,6 @@
 
         <div><input type="submit" value="Submit" id="signup-submit"></div>
 
-    </form>
+    </form></div>
 
 {% endblock %}
