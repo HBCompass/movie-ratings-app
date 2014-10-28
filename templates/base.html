@@ -12,10 +12,19 @@
                 {% endfor %}
                 </ul>
             {% endif %}
-        {% endwith %} 
+        {% endwith %}
 
+        {% if g.logged_in %}
+        <form action="/logout" method="get">
+        <button type="submit" name ="logout" id="logout">Log out</button>
+        </form>
+        {% endif %} 
+
+    
     </head>
     <body>
+
+
         {% block body %}
         {% endblock %}
     </body>

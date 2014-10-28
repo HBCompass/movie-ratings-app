@@ -1,9 +1,9 @@
 $(document).ready(function(){
 
- $("#login-submit").click(function(evt){
-        alert("Handler for login submit called.");
+ // $("#login-submit").click(function(evt){
+ //        alert("Handler for login submit called.");
 
-    });
+ //    });
 
 });
 

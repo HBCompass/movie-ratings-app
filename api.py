@@ -17,18 +17,24 @@ def get_users_ratings(id):
     pass
 
 def get_user_by_email(email): 
-    #email should be unique 
-    return dbsession.query(model.User).filter_by(id="email").first()
+    #email should be unique
+    return dbsession.query(model.User).filter_by(email=email).first()
 
 def check_login(email, password):
     #when a user a logs in: 
     #query the database for that email 
-        #user_record = get_user_by_email
+    user_record = get_user_by_email(email)
+    if user_record:
     #check if email and password match
-        #if user_record.password == password:
-            #set sesion["logged-in"] = True
-            #set session["user_id"]= user_record.id
-            #return true
-        #else 
-            #return false
-    pass
+        if user_record.password == password:
+            session["logged-in"] = True
+            session["user_id"]= user_record.id
+            return True
+    else:
+        return False
+
+def logout():
+    session["logged-in"] = False
+    session["user_id"]= None
+
+
