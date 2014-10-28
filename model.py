@@ -92,14 +92,14 @@ Movie ID: %s\n\
 
 ### End class declarations
 
-# def connect():
-#     global ENGINE
-#     global Session
+def connect():
+    global ENGINE
+    global Session
 
-#     ENGINE = create_engine("sqlite:///ratings.db", echo=True)
-#     Session = sessionmaker(bind=ENGINE)
+    ENGINE = create_engine("sqlite:///ratings.db", echo=True)
+    Session = sessionmaker(bind=ENGINE)
 
-#     return Session()
+    return Session()
 
 def main():
     """In case we need this for something"""

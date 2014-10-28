@@ -3,7 +3,7 @@
 
 <html>
 {% for user in users %}
-<h2>User {{ user.id }}, age {{ user.age }} has {{ user.ratings|length }} ratings</h2>
+<a href="/user/{{ user.id }}"><h2>User {{ user.id }}, age {{ user.age }} has {{ user.ratings|length }} ratings</h2></a>
 {% endfor %}
 </html>
 {% endblock %}

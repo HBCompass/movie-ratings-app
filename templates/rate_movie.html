@@ -1,7 +1,15 @@
 {% extends 'base.html' %}
 {% block body %}
+   
+    <div>
+    <h1>{{ movie.movie_title }}</h1>
+    <p>Release date: {{ movie.release_date }}</p>
+    <a href={{movie.IMDB}}>IMDB Page</a>
+    </div>
+
     <form>
-        Please rate {{ movie }}
+        <h3>Please rate {{ movie.movie_title }}:</h3>
+        <p> Your current rating: {{ template_rating}}</p> 
         <div><label for="rating">Rating:</label>
         <div><input type="radio" name="stars" value="1">&#9733;&#9734;&#9734;&#9734;&#9734;</div>
         <div><input type="radio" name="stars" value="2">&#9733;&#9733;&#9734;&#9734;&#9734;</div>

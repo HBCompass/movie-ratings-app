@@ -15,12 +15,14 @@ def setup_session():
 
 @app.before_request
 def get_user():
-    if session.get("user_id"):
+    if session.get("user_id") is not None:
         g.logged_in = True
+    else:
+        g.logged_in = False
 
 @app.route("/")
 def index():
-    user_list = model.session.query(model.User).limit(5).all()
+    user_list = model.session.query(model.User).limit(50).all()
     return render_template("user_list.html", users=user_list)
 
 @app.route("/signup")
@@ -98,16 +100,31 @@ def display_all_users():
     #link needs to redirect to that user's ratings
     pass
 
-@app.route("/userratings")
-def display_movie_ratings_by_user():
+@app.route("/user/<int:id>")
+def display_movie_ratings_by_user(id):
     # Returns user's movie ratings
-    pass
+    current_user = api.get_user_from_db(id)
+    user_ratings = current_user.ratings #what is this? list of rating objects
+    #rating object will have
+        #User_id
+        #translate into movie title --> rating.movie.movie_title
+        #Rating
+    return render_template("user.html", user_ratings=user_ratings) #make this
 
-@app.route("/rate")
-def rate_movie():
-    #when logged in, add or update rating for movie
-    movie_id=42 #placeholder
-    return render_template("rate_movie.html", movie=movie_id) #figure out what to actually pass
+@app.route("/ratemovie/<int:id>")
+def rate_movie(id):
+    #check if user logged in 
+    if g.logged_in == False:
+        flash("Please log in to rate a movie.")
+        return redirect("/login")
+    else:
+        #when logged in, add or update rating for movie
+        movie = api.get_movie_by_id(id)
+        rating = api.get_users_rating_by_movie_id(session.get("user_id"), id)
+        template_rating = None;
+        if rating:
+            template_rating = rating.rating
+        return render_template("rate_movie.html", movie=movie, template_rating=template_rating)
 
 
 

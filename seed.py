@@ -47,7 +47,7 @@ def load_ratings(session):
     with open("seed_data/u.data") as r:
         reader = csv.reader(r, delimiter="\t")
         for line in reader:
-            new_rating = model.Rating(user_id=line[0], movie_id=line[1], rating=line[3])
+            new_rating = model.Rating(user_id=line[0], movie_id=line[1], rating=line[2])
             session.add(new_rating)
     session.commit()
 

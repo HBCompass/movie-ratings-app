@@ -13,12 +13,15 @@ from model import session as dbsession
 def get_user_from_db(id):
     return dbsession.query(model.User).filter_by(id=id).first()
 
-def get_users_ratings(id):
-    pass
+def get_users_rating_by_movie_id(user_id, movie_id):
+    return dbsession.query(model.Rating).filter_by(user_id=user_id).filter_by(movie_id=movie_id).first()
 
 def get_user_by_email(email): 
     #email should be unique
     return dbsession.query(model.User).filter_by(email=email).first()
+
+def get_movie_by_id(id):
+    return dbsession.query(model.Movie).filter_by(id=id).first()
 
 def check_login(email, password):
     #when a user a logs in: 
