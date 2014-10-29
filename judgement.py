@@ -41,8 +41,6 @@ def process_signup():
     #if any values are null
     #flash("please fill out all fields")
     #redirect back to /signup (GET)
-    print "Request is: ", request
-    print "Request form is: ", request.form
 
     for value in request.form.values():
         if value == "": 
@@ -57,8 +55,6 @@ def process_signup():
 
     new_user = model.User()
     new_user.form_user(request.form)
-
-    print "new_user", new_user
 
     #insert that user into the database
     # session.add(new_user)
@@ -94,12 +90,6 @@ def logout():
     return redirect("/login")
 
 
-@app.route("/users")
-def display_all_users():
-    #users need to be clickable
-    #link needs to redirect to that user's ratings
-    pass
-
 @app.route("/user/<int:id>")
 def display_movie_ratings_by_user(id):
     # Returns user's movie ratings
@@ -126,7 +116,25 @@ def rate_movie(id):
             template_rating = rating.rating
         return render_template("rate_movie.html", movie=movie, template_rating=template_rating)
 
+@app.route("/ratemovie/<int:id>", methods=["POST"])
+def make_new_rating(id):
+    user_id = session.get("user_id")
+    rating = api.get_users_rating_by_movie_id(user_id, id)
+    num_stars = request.form.get("stars")
+    if rating is not None:
+        rating.rating = num_stars
+    else:
+        rating = model.Rating()
+        rating.rating = num_stars
+        rating.movie_id = id
+        rating.user_id = user_id
 
+
+    print rating
+    # session.add(rating)
+    # session.commit()
+    flash("Your rating has been recorded! Here are all the movies you have rated!")
+    return redirect("/user/" + str(session.get("user_id")))
 
 if __name__ == "__main__":
     app.run(debug = True)
