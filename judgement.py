@@ -116,7 +116,7 @@ def logout():
 def display_movie_ratings_by_user(id):
     # Returns user's movie ratings
     current_user = api.get_user_from_db(id)
-    user_ratings = current_user.ratings #what is this? list of rating objects
+    user_ratings = current_user.ratings #list of rating objects
     return render_template("user.html", user_ratings=user_ratings) #make this
 
 @app.route("/ratemovie/<int:id>")
@@ -129,10 +129,14 @@ def rate_movie(id):
         #when logged in, add or update rating for movie
         movie = api.get_movie_by_id(id)
         rating = api.get_users_rating_by_movie_id(session.get("user_id"), id)
+        user = api.get_user_from_db(session.get('user_id'))
+        prediction = None
         template_rating = None;
         if rating:
             template_rating = rating.rating
-        return render_template("rate_movie.html", movie=movie, template_rating=template_rating)
+        else:
+            prediction = user.predict_rating(movie)
+        return render_template("rate_movie.html", movie=movie, template_rating=template_rating, prediction=prediction)
 
 @app.route("/ratemovie/<int:id>", methods=["POST"])
 def make_new_rating(id):
@@ -154,6 +158,11 @@ def make_new_rating(id):
     model.session.commit()
     flash("Your rating has been recorded! Here are all the movies you have rated!")
     return redirect("/user/" + str(session.get("user_id")))
+
+
+
+
+
 
 if __name__ == "__main__":
     app.run(debug = True)

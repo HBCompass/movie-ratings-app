@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.orm import sessionmaker, relationship, backref, scoped_session
 from datetime import datetime
-
+from correlation import pearson
 
 
 ### Code for creating the database
@@ -44,6 +44,46 @@ class User(Base):
         #my_user = model.User()
         #my_user.form_user(request.form)
 
+    def similarity(self, other):
+        u_ratings = {}
+        paired_ratings = []
+        for r in self.ratings:
+            u_ratings[r.movie_id] = r
+
+        for r in other.ratings:
+            u_r = u_ratings.get(r.movie_id)
+            if u_r:
+                paired_ratings.append( (u_r.rating, r.rating) )
+
+        if paired_ratings:
+            return pearson(paired_ratings)
+        else:
+            return 0.0
+
+    def predict_rating(self, movie):
+        ratings = self.ratings
+        other_ratings = movie.ratings
+        similarities = [ (self.similarity(r.user), r) for r in other_ratings ]
+        similarities.sort(reverse = True)
+        similarities = [ sim for sim in similarities if sim[0] > 0 ]
+        if not similarities:
+            return None
+        numerator = sum([ r.rating * similarity for similarity, r in similarities ])
+        denominator = sum([ similarity[0] for similarity in similarities ])
+        return numerator/denominator
+
+    # def predict_rating_by_movie(self, movie):
+    #     ratings = self.ratings
+    #     other_ratings = movie.ratings
+    #     similarities = [ (movie.similarity(r.movie), r) for r in other_ratings ]
+    #     similarities.sort(reverse = True)
+    #     similarities = [ sim for sim in similarities if sim[0] > 0 ]
+    #     if not similarities:
+    #         return None
+    #     numerator = sum([ r.rating * similarity for similarity, r in similarities ])
+    #     denominator = sum([ similarity[0] for similarity in similarities ])
+    #     return numerator/denominator
+        
 
     def __repr__(self):
         return "Email: %s\n\
@@ -60,6 +100,22 @@ class Movie(Base):
     movie_title = Column(String(120))
     release_date = Column(DateTime)
     IMDB = Column(String(140), nullable = True)
+
+    # def similarity(self, other):
+    #     u_ratings = {}
+    #     paired_ratings = []
+    #     for r in self.ratings:
+    #         u_ratings[r.user_id] = r
+
+    #     for r in other.ratings:
+    #         u_r = u_ratings.get(r.user_id)
+    #         if u_r:
+    #             paired_ratings.append( (u_r.rating, r.rating) )
+
+    #     if paired_ratings:
+    #         return pearson(paired_ratings)
+    #     else:
+    #         return 0.0
 
     def __repr__(self):
         date_string = None
