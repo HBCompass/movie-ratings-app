@@ -1,12 +1,13 @@
 from flask import Flask, render_template, redirect, request, flash, g
 from flask import session as session
 import model
-import jinja2
+from form import SignUpForm
 import api
 
 app = Flask(__name__)
 
 app.secret_key = '\xc1\xe2=\x1b\x8e\xdc\xfdbq\xdaKuO*}g\xfd'
+
 
 @app.before_first_request
 def setup_session():
@@ -34,6 +35,27 @@ def sign_up():
     #flash "please enter valid data for so and so"
     return render_template("sign_up.html")
 
+# @app.route("/wtf")
+# def wtf():
+#     form = SignUpForm()
+#     return render_template("signup.html", form=form)
+
+# @app.route("/wtf", methods=["POST"])
+# def wtf_validate():
+#     print "Request:", request
+#     if request.form:
+#     # print "POST:", request.get("POST")
+#         print "Form:", request.form
+#         form = SignUpForm() #i don't know what this needs
+#         form.email = request.form.get("email")
+#         form.password = request.form.get("password")
+#         form.age = int(request.form.get("age"))
+#         form.zipcode = request.form.get("zipcode")
+#         # form.gender = request.form.get("gender")
+#         if form.validate():
+#             return 'Form validates!' 
+#     return ">:("
+
 @app.route("/signup", methods=["POST"])
 def process_signup():
     #processess signup form and redirects to ??? if successful
@@ -57,8 +79,8 @@ def process_signup():
     new_user.form_user(request.form)
 
     #insert that user into the database
-    # session.add(new_user)
-    # session.commit()
+    # model.session.add(new_user)
+    # model.session.commit()
 
     #redirect to login page 
     flash('Thanks for singing up! Please login!')
@@ -95,10 +117,6 @@ def display_movie_ratings_by_user(id):
     # Returns user's movie ratings
     current_user = api.get_user_from_db(id)
     user_ratings = current_user.ratings #what is this? list of rating objects
-    #rating object will have
-        #User_id
-        #translate into movie title --> rating.movie.movie_title
-        #Rating
     return render_template("user.html", user_ratings=user_ratings) #make this
 
 @app.route("/ratemovie/<int:id>")
@@ -128,11 +146,12 @@ def make_new_rating(id):
         rating.rating = num_stars
         rating.movie_id = id
         rating.user_id = user_id
+        model.session.add(rating)
 
 
     print rating
-    # session.add(rating)
-    # session.commit()
+    
+    model.session.commit()
     flash("Your rating has been recorded! Here are all the movies you have rated!")
     return redirect("/user/" + str(session.get("user_id")))
 
