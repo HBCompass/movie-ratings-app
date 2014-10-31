@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block body %}
    
+<div class="movie">
     <div>
     <h1>{{ movie.movie_title }}</h1>
     <p>Release date: {{ movie.release_date }}</p>
@@ -15,16 +16,16 @@
         {% if template_rating %}
         <div><p> Your current rating: {{ template_rating}}</p></div>
         {% endif %}
-        <div><label for="rating">Rating:</label>
-        <div><input type="radio" name="stars" value="1">&#9733;&#9734;&#9734;&#9734;&#9734;</div>
-        <div><input type="radio" name="stars" value="2">&#9733;&#9733;&#9734;&#9734;&#9734;</div>
-        <div><input type="radio" name="stars" value="3">&#9733;&#9733;&#9733;&#9734;&#9734;</div>
-        <div><input type="radio" name="stars" value="4">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
-        <div><input type="radio" name="stars" value="5">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+        <div class="form-group"><label for="rating">Rating:</label>
+        <div><input type="radio" name="stars" value="1"> &#9733;&#9734;&#9734;&#9734;&#9734;</div>
+        <div><input type="radio" name="stars" value="2"> &#9733;&#9733;&#9734;&#9734;&#9734;</div>
+        <div><input type="radio" name="stars" value="3"> &#9733;&#9733;&#9733;&#9734;&#9734;</div>
+        <div><input type="radio" name="stars" value="4"> &#9733;&#9733;&#9733;&#9733;&#9734;</div>
+        <div><input type="radio" name="stars" value="5"> &#9733;&#9733;&#9733;&#9733;&#9733;</div>
         </div>
 
-        <div><input type="submit" value="Submit" id="rate-submit"></div>
+        <div class="form-group"><input class="btn btn-default" type="submit" value="Submit" id="rate-submit"></div>
 
     </form>
-
+</div>
 {% endblock %}
